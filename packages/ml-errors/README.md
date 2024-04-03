@@ -2,8 +2,6 @@
 
 #####  模块依赖
 
-* reflect-metadata
-* typedi
 * typescript
 
 > 识别拦截报错统一处理方式
