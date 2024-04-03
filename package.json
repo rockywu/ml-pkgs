@@ -1,5 +1,5 @@
 {
-  "name": "ml-taro",
+  "name": "ml-pkgs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,5 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "typescript": "^5.4.3"
+  },
+  "private": "true",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

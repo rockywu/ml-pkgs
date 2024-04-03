@@ -1,7 +1,6 @@
 {
-  "name": "ml-errors",
-  "version": "1.0.0",
-  "private": true,
+  "name": "@ml-pkgs/ml-errors",
+  "version": "0.0.1",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "description": "小程序或网页异常错误管理模块",
@@ -18,5 +17,8 @@
   },
   "devDependencies": {
 
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
