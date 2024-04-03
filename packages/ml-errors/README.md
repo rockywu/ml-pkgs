@@ -1,0 +1,11 @@
+### Error模块
+
+#####  模块依赖
+
+* reflect-metadata
+* typedi
+* typescript
+
+> 识别拦截报错统一处理方式
+
+> 提供多重错误类型注册
