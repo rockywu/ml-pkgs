@@ -2,7 +2,7 @@
   "name": "@ml-pkgs/ml-errors",
   "version": "0.0.2",
   "types": "./types/index.d.ts",
-  "main": "./dist/index.esm.js",
+  "main": "./es/index.js",
   "module": "./dist/index.cjs.js",
   "description": "小程序或网页异常错误管理模块",
   "scripts": {
@@ -29,7 +29,10 @@
   },
   "files": [
     "dist",
+    "es",
+    "src",
     "README.md",
-    "types"
+    "types",
+    "package.json"
   ]
 }
