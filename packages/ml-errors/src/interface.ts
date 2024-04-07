@@ -9,8 +9,8 @@ export interface IErrorManager {
   register(handler: IErrorHandler<Error> | IErrorHandler<Error>[]);
   trigger(err: Error);
   currentError: Error;
-  onError(e): void;
-  onUnhandledRejection(e): void;
+  onError(e: any): void;
+  onUnhandledRejection(e: any): void;
 }
 
 export interface IErrorHandler<T> {

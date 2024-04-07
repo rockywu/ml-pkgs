@@ -1,11 +1,12 @@
 {
   "name": "@ml-pkgs/ml-errors",
-  "version": "0.0.1",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
+  "version": "0.0.2",
+  "types": "./types/index.d.ts",
+  "main": "./dist/index.esm.js",
+  "module": "./dist/index.cjs.js",
   "description": "小程序或网页异常错误管理模块",
   "scripts": {
-    "test": "jest"
+    "build": "rollup -c rollup.config.mjs"
   },
   "browserslist": [
     "last 3 versions",
@@ -13,12 +14,22 @@
     "ios >= 8"
   ],
   "author": "rockywu",
-  "dependencies": {
-  },
   "devDependencies": {
-
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.14.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.3"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "config": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "types"
+  ]
 }
