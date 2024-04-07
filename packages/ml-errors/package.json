@@ -2,8 +2,8 @@
   "name": "@ml-pkgs/ml-errors",
   "version": "0.0.4",
   "types": "./types/index.d.ts",
-  "main": "./es/index.js",
-  "module": "./dist/index.cjs.js",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
   "description": "小程序或网页异常错误管理模块",
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
