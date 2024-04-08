@@ -1,9 +1,9 @@
-### Error模块
+## ml-errors
 
-#####  模块依赖
+**Error注册、管理、处理模块**
 
-* typescript
+#### 安装
 
-> 识别拦截报错统一处理方式
+`npm i @ml-pkgs/ml-errors`
 
-> 提供多重错误类型注册
+#### 使用

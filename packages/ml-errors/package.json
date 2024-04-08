@@ -1,10 +1,16 @@
 {
   "name": "@ml-pkgs/ml-errors",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "types": "./types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
-  "description": "小程序或网页异常错误管理模块",
+  "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-errors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockywu/ml-pkgs.git"
+  },
+  "description": "Error注册、管理、处理模块",
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
     "generate": "npx tsc",
