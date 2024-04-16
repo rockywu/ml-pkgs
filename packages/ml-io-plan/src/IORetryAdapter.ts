@@ -52,7 +52,7 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
         retries++
       }
     } while (retries < this.maxRetries)
-    console?.error(`IO operation failed after ${this.maxRetries} retries.`)
+    console.log(`IO operation failed after ${this.maxRetries} retries.`)
     throw lastError;
   }
 

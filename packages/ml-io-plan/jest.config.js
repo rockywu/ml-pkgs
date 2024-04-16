@@ -1,5 +1,10 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  // 其他配置选项
+  testMatch: [
+    "**/__tests__/**/*.(spec|test).[tj]s"
+  ],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+  ],
 };

@@ -31,7 +31,7 @@ const ioRetryImpl = new IORetryAdapter(fetchData, 5, 2000);
 async function run() {
     let res = await ioRetryImpl.executeWithRetry('test1', 'test2')
     console.log('result', res);
-    //delay 300ms console.log ["test1", "test2"]
+    //console.log ["test1", "test2"]
 }
 
 ```
