@@ -1,10 +1,15 @@
 ## ml-io-plan
 
-### 目标是设计一个通用的IO 计划机制
+>  目标是设计一个通用的IO 计划机制
+
+#### 安装
+
+`npm i @ml-pkgs/ml-io-plan`
+
+#### 使用
 
 
-
-### 1、IORetryAdapter
+######  1、IORetryAdapter
 
 > IO 重试机制
 
