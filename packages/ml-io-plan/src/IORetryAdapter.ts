@@ -3,6 +3,7 @@
  */
 
 import { IOFunction } from "./interface";
+import { delay } from "./utils";
 
 export class IORetryAdapter<T, Args extends any[] = any[]> {
   /**
@@ -29,16 +30,7 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
     this.maxRetries = maxRetries;
     this.retryInterval = retryInterval;
   }
-
-  /**
-   * 等待延迟
-   * @param ms 
-   * @returns 
-   */
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
+  
   /**
    * 发起IO请求
    * @param args 
@@ -50,7 +42,7 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
     do {
       //在第二次之后开始尝试启动
       if (retries > 0) {
-        await this.delay(this.retryInterval);
+        await delay(this.retryInterval);
       }
       try {
         return await this.ioFunction(...args);

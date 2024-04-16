@@ -1,4 +1,5 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
     "noImplicitAny": false, // 不允许隐式的any类型
     "noImplicitThis": true, // 不允许this有隐式的any类型
@@ -23,6 +24,11 @@
     "declarationDir": "./types", /* '.d.ts' 文件输出目录 */
     "outDir": "./es"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "@types/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
