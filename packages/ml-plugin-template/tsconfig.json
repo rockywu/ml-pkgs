@@ -1,12 +1,14 @@
 {
   "extends": "../../tsconfig.root.json",
   "compilerOptions": {
-    "types": ["jest"],
+    "types": [
+      "jest"
+    ],
     "declarationDir": "./types", /* '.d.ts' 文件输出目录 */
   },
   "include": [
     "src/**/*.ts",
-    "__tests__/**/*.ts",
+    "__tests__/**/*.ts"
   ],
   "exclude": [
     "node_modules"
