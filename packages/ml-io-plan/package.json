@@ -14,7 +14,7 @@
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
     "generate": "npx tsc",
-    "publish": "npm publish",
+    "publish": "npm run generate && npm run build && npm publish",
     "test": "jest "
   },
   "browserslist": [
@@ -42,11 +42,8 @@
   },
   "files": [
     "dist",
-    "es",
-    "src",
     "README.md",
     "README.en.md",
-    "types",
     "package.json"
   ]
 }
