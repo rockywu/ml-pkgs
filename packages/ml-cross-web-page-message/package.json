@@ -1,16 +1,16 @@
 {
-  "name": "@ml-pkgs/ml-io-plan",
+  "name": "@ml-pkgs/ml-cross-web-page-message",
   "version": "0.0.7",
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
-  "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-io-plan",
+  "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-cross-web-page-message",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rockywu/ml-pkgs.git"
   },
-  "description": "io-plan IO 计划",
+  "description": "ml跨网页通讯行为",
   "scripts": {
     "build": "rollup -c rollup.config.mjs",
     "test": "jest",

@@ -3,12 +3,14 @@
   "compilerOptions": {
     "types": ["jest"],
     "declarationDir": "./types", /* '.d.ts' 文件输出目录 */
+    // "outDir": "./es",
   },
   "include": [
     "src/**/*.ts",
     "__tests__/**/*.ts",
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "__tests__",
   ]
 }
