@@ -6,8 +6,8 @@ export type IMessage<T extends any = any> = {
     message: T
 }
 
-export interface CallbackFunction<T extends any = any> {
-    (event: IMessage['event'], message: IMessage<T>['message']): void
+export interface ICallback<T extends any = any> {
+    (message: IMessage<T>['message'], event: IMessage['event']): void
 }
 
 export interface ICrossHander {

@@ -20,7 +20,7 @@ export type IMessage<T extends any = any> = {
     message: T
 }
 
-export interface CallbackFunction<T extends any = any> {
+export interface ICallback<T extends any = any> {
     (message: IMessage<T>['message'], event: IMessage['event']): void
 }
 ```
@@ -31,8 +31,8 @@ export interface CallbackFunction<T extends any = any> {
  */
 export declare class CrossWebPageInvokeFactory extends EventEmitter {
     send(event: string, message: any): void;
-    on(event: string, callback: CallbackFunction, context?: any): void;
-    once(event: string, callback: CallbackFunction, context?: any): void;
+    on(event: string, callback: ICallback, context?: any): void;
+    once(event: string, callback: ICallback, context?: any): void;
     ...
 }
 
