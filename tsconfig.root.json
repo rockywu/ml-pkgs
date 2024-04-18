@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node", //修改默认为node模式下的解析策略
     "noImplicitAny": false, // 不允许隐式的any类型
     "noImplicitThis": true, // 不允许this有隐式的any类型
     "noUnusedLocals": true, //是否检查未使用的局部变量

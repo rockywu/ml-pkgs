@@ -17,6 +17,7 @@ export default {
     },
   ],
   plugins: [
+    commonjs(), //解析commonjs 导入
     resolve(), // 解析导入的第三方模块
     typescript({ tsconfig: './tsconfig.prod.json' }) // 使用 TypeScript 插件
   ]

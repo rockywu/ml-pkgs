@@ -2,6 +2,7 @@
 
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
 const name = "index"
 
 export default {
@@ -17,7 +18,8 @@ export default {
     },
   ],
   plugins: [
+    commonjs(), //解析commonjs 导入
     resolve(), // 解析导入的第三方模块
-    typescript({ tsconfig: './tsconfig.prod.json' }) // 使用 TypeScript 插件
+    typescript({ tsconfig: './tsconfig.prod.json' }), // 使用 TypeScript 插件
   ]
 };
