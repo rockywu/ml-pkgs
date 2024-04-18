@@ -62,7 +62,7 @@ export class CrossHander implements ICrossHander {
   }
 }
 
-export class CrossWebPageMessageFactory extends EventEmitter {
+export class CrossWebPageInvokeFactory extends EventEmitter {
 
   private crossHander: ICrossHander = null;
 
@@ -78,7 +78,6 @@ export class CrossWebPageMessageFactory extends EventEmitter {
       this.emit(event, event, message);
     });
   }
-
   /**
    * 发送消息
    * @param event 
@@ -100,4 +99,4 @@ export class CrossWebPageMessageFactory extends EventEmitter {
 /**
  * 创建一个基础对象
  */
-export const CrossWebPageMessage = new CrossWebPageMessageFactory(DEFAULT_CHANNEL_KEY)
+export const CrossWebPageInvoke = new CrossWebPageInvokeFactory(DEFAULT_CHANNEL_KEY)

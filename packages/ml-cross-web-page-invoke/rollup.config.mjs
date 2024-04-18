@@ -11,7 +11,7 @@ export default {
     {
       file: `dist/${name}.umd.js`,
       format: 'umd',
-      name: "CrossWebPage"
+      name: "MlCrossWebPage"
     },
     {
       file: `dist/${name}.cjs.js`,
