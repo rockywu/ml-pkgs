@@ -91,6 +91,12 @@ export class CrossWebPageInvokeFactory extends EventEmitter {
     this.crossHander.send(data);
   }
 
+  /**
+   * 监听消息 alias on
+   * @param event 
+   * @param callback 
+   * @param context 
+   */
   receive(event: string, callback: (event: string, message: any) => void, context?: any) {
     this.on(event, callback, context)
   }
