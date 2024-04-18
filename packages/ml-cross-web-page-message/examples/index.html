@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sec Cross</title>
+</head>
+
+<body>
+  <button id="app" onclick="onClick()">send sec</button>
+</body>
+<script src="../dist/index.umd.js"></script>
+<script>
+  var cross = CrossWebPage.CrossWebPageMessage;
+  var onClick = function () {
+    console.log('click - sec')
+    cross.send('sec', {xxx: 2})
+  }
+  cross.receive('index', function(type, message) {
+    console.log('context', this)
+    console.log(type, message)
+
+  }, {a: 1})
+</script>
+
+</html>

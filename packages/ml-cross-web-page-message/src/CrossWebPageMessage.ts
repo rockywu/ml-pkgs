@@ -1,6 +1,5 @@
 import { ICrossHander, ReceiveFunction } from "./interface";
 import EventEmitter from 'eventemitter3'
-//eventemitter3 todo 尝试依赖事情管理器
 
 /**
  * 跨网页通讯
@@ -29,6 +28,8 @@ export class CrossHander implements ICrossHander {
       this.broadcastChannel.postMessage(message);
     } else if (this.storeChannel) {
       this.storeChannel.setItem(this.channelKey, message);
+      //解决storage 是通过监听数据改变的机制无法出发再次响应问题
+      this.storeChannel.removeItem(this.channelKey);
     } else {
       throw new Error('当前环境不支持 BroadcastChannel 、 LocalStorage 和 SessionStorage 两类进行跨网页通讯')
     }
@@ -44,7 +45,7 @@ export class CrossHander implements ICrossHander {
         const { type, message } = JSON.parse(channelData)
         callback(type, message)
       } catch (e) {
-        console.log('CrossHander-emitCallback', e);
+        console.log('CrossHander-emitCallback-error', e);
       }
     }
     if (broadcastChannel) {
@@ -53,7 +54,7 @@ export class CrossHander implements ICrossHander {
       };
     } else if (this.storeChannel) {
       window.addEventListener('storage', (event) => {
-        if (event.key === this.channelKey) {
+        if (event.key === this.channelKey && (event.newValue !== void 0 && event.newValue !== null)) {
           emitCallback(event.newValue)
         }
       });

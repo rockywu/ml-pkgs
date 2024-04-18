@@ -9,6 +9,11 @@ export default {
   input: 'src/index.ts',
   output: [
     {
+      file: `dist/${name}.umd.js`,
+      format: 'umd',
+      name: "CrossWebPage"
+    },
+    {
       file: `dist/${name}.cjs.js`,
       format: 'cjs' // CommonJS 格式
     },
