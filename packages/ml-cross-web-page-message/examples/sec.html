@@ -17,9 +17,9 @@
     console.log('click - index')
     cross.send('index', { xxx: 1 })
   }
-  cross.receive('sec', function (type, message) {
+  cross.receive('sec', function (event, message) {
     console.log('context', this)
-    console.log(type, message)
+    console.log('event', event, 'message', message)
   }, { a: 2 })
 </script>
 

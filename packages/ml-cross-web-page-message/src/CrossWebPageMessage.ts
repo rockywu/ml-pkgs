@@ -1,4 +1,4 @@
-import { ICrossHander, ReceiveFunction } from "./interface";
+import { ICrossHander, IMessage, ReceiveFunction } from "./interface";
 import EventEmitter from 'eventemitter3'
 
 /**
@@ -42,8 +42,8 @@ export class CrossHander implements ICrossHander {
     const broadcastChannel = this.broadcastChannel;
     const emitCallback = (channelData: string) => {
       try {
-        const { type, message } = JSON.parse(channelData)
-        callback(type, message)
+        const { event, message } = JSON.parse(channelData) as IMessage;
+        callback(event, message)
       } catch (e) {
         console.log('CrossHander-emitCallback-error', e);
       }
@@ -74,26 +74,26 @@ export class CrossWebPageMessageFactory extends EventEmitter {
       this.crossHander = new CrossHander(channelKey);
     }
     // 执行程序连接器,只要作用是绑定监听事件
-    this.crossHander.attach((type, message) => {
-      this.emit(type, { type, message });
+    this.crossHander.attach((event, message) => {
+      this.emit(event, event, message);
     });
   }
 
   /**
    * 发送消息
-   * @param type 
+   * @param event 
    * @param message 
    */
-  send(type: string, message: any) {
+  send(event: string, message: any) {
     /**
      * 将数据序列号,转为普通对象。由于页面间无法访问函数，所以需要序列化。
      */
-    const data = JSON.stringify({ type, message })
+    const data = JSON.stringify({ event, message })
     this.crossHander.send(data);
   }
 
-  receive(type: string, callback: (type: string, message: any) => void, context?: any) {
-    this.on(type, callback, context)
+  receive(event: string, callback: (event: string, message: any) => void, context?: any) {
+    this.on(event, callback, context)
   }
 }
 
