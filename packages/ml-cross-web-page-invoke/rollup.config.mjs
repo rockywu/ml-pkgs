@@ -3,25 +3,26 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import commonjs from '@rollup/plugin-commonjs';
-import fs from 'fs';
-import {join} from 'path'
-const name = "index"
+import path from 'path'
+import fs from 'fs'
 
 //删除dist文件夹中的所有文件
-const delDir = (path) => {
-  const files = fs.readdirSync(path);
-  files.forEach(file => {
-    const filePath = join(path, file);
-    const stats = fs.statSync(filePath);
-    if (stats.isFile()) {
-      fs.unlinkSync(filePath);
-    } else if (stats.isDirectory()) {
-      delDir(filePath);
-    }
-  });
-};
+function deleteFolderRecursive(folderPath) {
+  if (fs.existsSync(folderPath)) {
+    fs.readdirSync(folderPath).forEach(function (file, index) {
+      var curPath = path.join(folderPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(folderPath);
+  }
+}
 //尝试删除构建的文件夹
-delDir('dist');
+deleteFolderRecursive('./dist');
+const name = "index"
 
 export default [
   {

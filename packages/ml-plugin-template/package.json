@@ -4,6 +4,7 @@
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
+  "umdfile": "./dist/index.umd.js",
   "private": true,
   "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-plugin-template",
   "license": "MIT",
@@ -13,10 +14,9 @@
   },
   "description": "ml插件模板",
   "scripts": {
-    "build": "rollup -c rollup.config.mjs",
-    "generate": "npx tsc",
-    "publish": "npm run generate && npm run build && npm publish",
-    "test": "jest "
+    "build": "npm run test && rollup -c rollup.config.mjs",
+    "test": "jest",
+    "publish": "npm run build && npm publish"
   },
   "browserslist": [
     "last 3 versions",
