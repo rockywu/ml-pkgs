@@ -1,6 +1,6 @@
 {
   "name": "@ml-pkgs/ml-cross-web-page-invoke",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",

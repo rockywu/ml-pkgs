@@ -1,4 +1,4 @@
-import { ICrossHander, IMessage, ReceiveFunction } from "./interface";
+import { ICrossHander, IMessage } from "./interface";
 import EventEmitter from 'eventemitter3'
 
 /**
@@ -38,24 +38,16 @@ export class CrossHander implements ICrossHander {
   /**
    * 连接器
    */
-  attach(callback: ReceiveFunction) {
+  attach(callback: (message: string) => void) {
     const broadcastChannel = this.broadcastChannel;
-    const emitCallback = (channelData: string) => {
-      try {
-        const { event, message } = JSON.parse(channelData) as IMessage;
-        callback(event, message)
-      } catch (e) {
-        console.log('CrossHander-emitCallback-error', e);
-      }
-    }
     if (broadcastChannel) {
       broadcastChannel.onmessage = (event) => {
-        emitCallback(event.data)
+        callback(event.data)
       };
     } else if (this.storeChannel) {
       window.addEventListener('storage', (event) => {
         if (event.key === this.channelKey && (event.newValue !== void 0 && event.newValue !== null)) {
-          emitCallback(event.newValue)
+          callback(event.newValue)
         }
       });
     }
@@ -74,8 +66,13 @@ export class CrossWebPageInvokeFactory extends EventEmitter {
       this.crossHander = new CrossHander(channelKey);
     }
     // 执行程序连接器,只要作用是绑定监听事件
-    this.crossHander.attach((event, message) => {
-      this.emit(event, event, message);
+    this.crossHander.attach((invokeMessage) => {
+      try {
+        const { event, message } = JSON.parse(invokeMessage) as IMessage;
+        this.emit(event, message, event);
+      } catch (e) {
+        console.log('attach-callback-error', e);
+      }
     });
   }
   /**
@@ -89,16 +86,6 @@ export class CrossWebPageInvokeFactory extends EventEmitter {
      */
     const data = JSON.stringify({ event, message })
     this.crossHander.send(data);
-  }
-
-  /**
-   * 监听消息 alias on
-   * @param event 
-   * @param callback 
-   * @param context 
-   */
-  receive(event: string, callback: (event: string, message: any) => void, context?: any) {
-    this.on(event, callback, context)
   }
 }
 

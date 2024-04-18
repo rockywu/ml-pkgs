@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sec Cross</title>
+  <title>Index Cross</title>
 </head>
 
 <body>
@@ -15,13 +15,17 @@
   var cross = MlCrossWebPage.CrossWebPageInvoke;
   var onClick = function () {
     console.log('click - sec')
-    cross.send('sec', {xxx: 2})
+    cross.send('sec', {'message': 'sec'})
   }
-  cross.receive('index', function(event, message) {
+  cross.on('index', function(message, event) {
     console.log('context', this)
     console.log('event', event, 'message', message)
 
-  }, {a: 1})
+  }, {context: 1})
+  cross.once('index', function(message, event) {
+    console.log('once-context', this)
+    console.log('once-event', event, 'message', message)
+  }, {context: 2})
 </script>
 
 </html>

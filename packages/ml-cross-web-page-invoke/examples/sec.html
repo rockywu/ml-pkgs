@@ -14,13 +14,18 @@
 <script>
   var cross = MlCrossWebPage.CrossWebPageInvoke;
   var onClick = function () {
-    console.log('click - index')
-    cross.send('index', { xxx: 1 })
+    console.log('click - sec')
+    cross.send('index', {'message': 'index'})
   }
-  cross.receive('sec', function (event, message) {
+  cross.on('sec', function(message, event) {
     console.log('context', this)
     console.log('event', event, 'message', message)
-  }, { a: 2 })
+
+  }, {context: 1})
+  cross.once('sec', function(message, event) {
+    console.log('once-context', this)
+    console.log('once-event', event, 'message', message)
+  }, {context: 2})
 </script>
 
 </html>
