@@ -4,6 +4,7 @@
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
+  "umdfile": "./dist/index.umd.js",
   "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-io-plan",
   "license": "MIT",
   "repository": {

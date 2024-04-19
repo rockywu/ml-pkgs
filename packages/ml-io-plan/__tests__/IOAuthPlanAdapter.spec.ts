@@ -1,15 +1,42 @@
-// import { IOAuthPlanAdapter } from '../src/IOAuthPlanAdapter';
+// import { IOAuthPlanAdapter, IOAuthPlanExpiredError } from '../src/IOAuthPlanAdapter';
+
+// class Store {
+//   public value: string;
+//   get() {
+//     return this.value;
+//   }
+//   set(value: string) {
+//     this.value = value;
+//   }
+// }
 
 describe('IOAuthPlanAdapter', () => {
   // let requestAuthMock;
   // let ioFunctionMock;
   // let adapter;
+  // let store;
 
   beforeEach(() => {
+    // store = new Store();
     // requestAuthMock = jest.fn();
     // ioFunctionMock = jest.fn();
     // adapter = new IOAuthPlanAdapter(requestAuthMock, ioFunctionMock);
   });
+  // test('如果令牌过期，executeWithRequest应该调用requestAuth', async () => {
+  //   ioFunctionMock.mockReturnValue(new Promise((resolve, reject) => {
+  //     const token = store.get();
+  //     if (!token) {
+  //       reject(new IOAuthPlanExpiredError('token过期了'))
+  //     }
+  //     resolve(null)
+  //   }))
+  //   requestAuthMock.mockReturnValue(new Promise((resolve) => {
+  //     store.set('token')
+  //     resolve(null)
+  //   }))
+  //   adapter.execute()
+  //   expect(requestAuthMock).toHaveBeenCalledTimes(1);
+  // })
 
   test('test', async () => {
     expect(1).toBe(1);
