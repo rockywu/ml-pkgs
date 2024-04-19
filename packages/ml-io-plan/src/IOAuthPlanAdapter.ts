@@ -65,7 +65,7 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
       if (e.name === 'IOAuthPlanExpiredError') {
         //当出现过期异常，则重新请求token
         this.isTokenExpired = true;
-        res = await this.executeWithRequest(...args);
+        res = await this.execute(...args);
       } else {
         throw e;
       }
@@ -81,6 +81,7 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
    * @returns 
    */
   executeWithRequest(...args: Args): Promise<T> {
+    console?.warn(`Function "executeWithRequest" will be deprecated after version 0.1.0, please use an alternative function "execute"`)
     return this.execute(...args)
   }
 }

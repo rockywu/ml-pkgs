@@ -63,6 +63,7 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
    * @returns 
    */
   public  executeWithRetry(...args: Args): Promise<T> {
+    console?.warn(`Function "executeWithRetry" will be deprecated after version 0.1.0, please use an alternative function "execute"`)
     return this.execute(...args)
   }
 }
