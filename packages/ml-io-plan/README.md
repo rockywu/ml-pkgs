@@ -6,8 +6,17 @@
 
 `npm i @ml-pkgs/ml-io-plan`
 
-#### 使用
+#### 使用 Api
 
+1. IORetryAdapter IO重试适配器
+2. IOAuthPlanAdapter IO认证适配器
+3. IOAuthPlanExpiredError IO认证异常Error
+
+**Version 0.1.0 之后将废弃函数**
+
+`IORetryAdapter.executeWithRetry` 请使用 `IORetryAdapter.execute`
+
+`IOAuthPlanAdapter.executeWithRequest` 请使用 `executeWithRequest.execute`
 
 
 ######  1、IORetryAdapter
@@ -29,8 +38,20 @@ async fetchData(...args) {
 }
 
 const ioRetryImpl = new IORetryAdapter(fetchData, 5, 2000);
+/**
+ * Old Demo
+ */
 async function run() {
     let res = await ioRetryImpl.executeWithRetry('test1', 'test2')
+    console.log('result', res);
+    //console.log ["test1", "test2"]
+}
+
+/**
+ * New Demo
+ */
+async function run() {
+    let res = await ioRetryImpl.execute('test1', 'test2')
     console.log('result', res);
     //console.log ["test1", "test2"]
 }
@@ -94,12 +115,28 @@ async function ioRequest(p) {
 //尝试模拟IO认证机制
 const io = new IOAuthPlanAdapter(authHandle.executeWithRetry.bind(authHandle), ioRequest);
 
+/**
+ * Old Demo 1
+ */
 async function run() {
   const res = await Promise.all([
     io.executeWithRequest(1),
     io.executeWithRequest(2),
     io.executeWithRequest(3),
     io.executeWithRequest(4)
+  ])
+  console.log('result', JSON.stringify(res))
+}
+
+/**
+ * New Demo 2
+ */
+ async function run() {
+  const res = await Promise.all([
+    io.execute(1),
+    io.execute(2),
+    io.execute(3),
+    io.execute(4)
   ])
   console.log('result', JSON.stringify(res))
 }

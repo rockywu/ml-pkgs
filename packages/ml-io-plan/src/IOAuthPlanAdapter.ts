@@ -40,7 +40,12 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
     return this.requestAuthPromise;
   }
 
-  async executeWithRequest(...args: Args): Promise<T> {
+  /**
+   * 发起IO请求
+   * @param args 
+   * @returns 
+   */
+  async execute(...args: Args): Promise<T> {
     if (this.isTokenExpired) {
       //尝试等待
       try {
@@ -67,6 +72,16 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
     }
     //否则返回成功值
     return res;
+  }
+
+  /**
+   * 发起IO请求
+   * @param args 
+   * @deprecated 将在0.1.0版本以后废弃,统一使用execute
+   * @returns 
+   */
+  executeWithRequest(...args: Args): Promise<T> {
+    return this.execute(...args)
   }
 }
 

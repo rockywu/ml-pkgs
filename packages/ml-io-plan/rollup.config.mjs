@@ -26,22 +26,39 @@ function deleteFolderRecursive(folderPath) {
 deleteFolderRecursive('./dist');
 const name = "index"
 
-export default {
-  input: 'src/index.ts',
-  output: [
-    {
-      file: `dist/${name}.cjs.js`,
-      format: 'cjs' // CommonJS 格式
-    },
-    {
-      file: `dist/${name}.esm.js`, // ES模块格式输出文件
-      format: 'es',
-    },
-  ],
-  plugins: [
-    commonjs(),
-    resolve(), // 解析导入的第三方模块
-    typescript({ tsconfig: './tsconfig.prod.json' }), // 使用 TypeScript 插件
-    isProduction ? terser() : null
-  ]
-};
+export default [
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: `dist/${name}.cjs.js`,
+        format: 'cjs' // CommonJS 格式
+      },
+      {
+        file: `dist/${name}.esm.js`, // ES模块格式输出文件
+        format: 'es',
+      },
+    ],
+    plugins: [
+      commonjs(),
+      resolve(), // 解析导入的第三方模块
+      typescript({ tsconfig: './tsconfig.prod.json' }), // 使用 TypeScript 插件
+    ]
+  },
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: `dist/${name}.umd.js`,
+        format: 'umd', // umd 格式
+        name: "MlIoPlan"
+      },
+    ],
+    plugins: [
+      commonjs(),
+      resolve(), // 解析导入的第三方模块
+      typescript({ tsconfig: './tsconfig.prod.json' }), // 使用 TypeScript 插件
+      isProduction ? terser() : null
+    ]
+  },
+];

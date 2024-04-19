@@ -30,13 +30,13 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
     this.maxRetries = maxRetries;
     this.retryInterval = retryInterval;
   }
-  
+
   /**
    * 发起IO请求
    * @param args 
    * @returns 
    */
-  public async executeWithRetry(...args: Args): Promise<T> {
+  public async execute(...args: Args): Promise<T> {
     let retries = 0;
     let lastError = null;
     do {
@@ -56,4 +56,13 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
     throw lastError;
   }
 
+  /**
+   * 发起IO请求
+   * @param args 
+   * @deprecated 将在0.1.0版本以后废弃,统一使用execute
+   * @returns 
+   */
+  public  executeWithRetry(...args: Args): Promise<T> {
+    return this.execute(...args)
+  }
 }
