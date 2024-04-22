@@ -45,7 +45,7 @@ export declare const CrossWebPageInvoke: CrossWebPageInvokeFactory;
 
 ### 历史变更 - ChangeLog
 
-[历史变更](./CHANGELOG.md)
+[历史变更](https://github.com/rockywu/ml-pkgs/blob/main/packages/ml-cross-web-page-invoke/CHANGELOG.md)
 
 ######  模块介绍
 
