@@ -8,7 +8,8 @@
   },
   "include": [
     "src/**/*.ts",
-    "__tests__/**/*.ts"
+    "__tests__/**/*.ts",
+    "example/**/*.ts"
   ],
   "exclude": [
     "node_modules"

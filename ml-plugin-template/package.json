@@ -1,19 +1,23 @@
 {
   "name": "@ml-pkgs/ml-plugin-template",
   "version": "0.0.7",
+  "umdName": "MLPluginTemplate",
+  "description": "ml插件模板",
+  "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-plugin-template",
+  "private": true,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "restricted"
+  },
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
   "umdfile": "./dist/index.umd.js",
-  "umdName": "MLPluginTemplate",
-  "private": true,
-  "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-plugin-template",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rockywu/ml-pkgs.git"
   },
-  "description": "ml插件模板",
   "scripts": {
     "dev": " cross-env NODE_ENV=development rollup -w -c rollup.config.dev.mjs",
     "build": " npm run test && cross-env NODE_ENV=production rollup -c rollup.config.mjs",
@@ -45,10 +49,6 @@
     "ts-jest": "^29.1.2",
     "tslib": "^2.6.2",
     "typescript": "^5.4.3"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "restricted"
   },
   "config": {
     "registry": "https://registry.npmjs.org/"
