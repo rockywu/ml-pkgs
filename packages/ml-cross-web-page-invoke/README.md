@@ -43,9 +43,9 @@ export declare const CrossWebPageInvoke: CrossWebPageInvokeFactory;
 
 ```
 
-### 历史变更 -ChangeLog
+### 历史变更 - ChangeLog
 
-[历史变更](./CHANGELOG)
+[历史变更](./CHANGELOG.md)
 
 ######  模块介绍
 

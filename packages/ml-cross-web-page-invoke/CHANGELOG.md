@@ -1,7 +1,6 @@
 # Change Log
 
-All notable changes to this project will be documented in this file.
-This project adheres to Semantic Versioning.
+这里保留了改动记录
 
 
 ## [1.0.0] - 2024-04-22

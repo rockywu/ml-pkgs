@@ -1,6 +1,6 @@
 {
   "name": "@ml-pkgs/ml-cross-web-page-invoke",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
@@ -16,7 +16,7 @@
     "build": "npm run test && rollup -c rollup.config.mjs",
     "build:publish": " npm run test && cross-env NODE_ENV=production rollup -c rollup.config.mjs",
     "test": "jest",
-    "publish": "npm run build && npm publish"
+    "publish": "npm run build:publish && npm publish"
   },
   "browserslist": [
     "last 3 versions",
@@ -48,6 +48,7 @@
     "dist",
     "README.md",
     "README.en.md",
+    "CHANGELOG.md",
     "package.json"
   ],
   "dependencies": {
