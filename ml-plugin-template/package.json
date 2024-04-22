@@ -49,6 +49,9 @@
     "dist",
     "README.md",
     "README.en.md",
+    "CHANGELOG.md",
     "package.json"
-  ]
+  ],
+  "dependencies": {},
+  "peerDependencies": {}
 }

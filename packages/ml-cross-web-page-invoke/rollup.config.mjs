@@ -31,11 +31,10 @@ const MLBanner = `
 /*!
  * ${packageJson.name} v${packageJson.version}
  * (c) 2024 ML Pkgs ${packageJson.homepage}
+ * Auther: ${packageJson.author}
  * Released under the ${packageJson.license} License.
  */
 `;
-console.log("MLBanner", MLBanner)
-
 
 export default [
   {
