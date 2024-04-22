@@ -1,4 +1,4 @@
 /**
  * interface
  */
-export default {}
+export default {};

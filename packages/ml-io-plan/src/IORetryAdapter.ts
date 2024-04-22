@@ -2,14 +2,14 @@
  * IO重发尝试
  */
 
-import { IOFunction } from "./interface";
 import { delay } from "./utils";
+import { IORequestHandle } from './interface'
 
-export class IORetryAdapter<T, Args extends any[] = any[]> {
-  /**
-   * IO函数
-   */
-  private ioFunction: IOFunction<T, Args>;
+export class IONetworkError extends Error {
+  name = 'IONetworkError'
+}
+
+export class IORetryPlanAdapter<T, Args extends any[] = any[]> {
   /**
    * 尝试重试次数
    */
@@ -21,12 +21,11 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
 
   /**
    * 通用适配器
-   * @param ioFunction 
+   * @param ioRequestHandle  请求句柄
    * @param maxRetries 重试次数
    * @param retryInterval  next等待延迟
    */
-  constructor(ioFunction: IOFunction<T, Args>, maxRetries: number = 3, retryInterval: number = 300) {
-    this.ioFunction = ioFunction;
+  constructor(private ioRequestHandle: IORequestHandle<T, Args>, maxRetries: number = 3, retryInterval: number = 300) {
     this.maxRetries = maxRetries;
     this.retryInterval = retryInterval;
   }
@@ -45,11 +44,16 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
         await delay(this.retryInterval);
       }
       try {
-        return await this.ioFunction(...args);
-      } catch (error) {
-        lastError = error;
-        console.log(`IO operation failed, retrying... (Attempt ${retries + 1}/${this.maxRetries})`);
-        retries++
+        return await this.ioRequestHandle.request(...args);
+      } catch (e: any | IONetworkError) {
+        lastError = e;
+        if (e.name === 'IONetworkError') {
+          //网络异常时才重新进入循环
+          console.log(`IO operation failed, retrying... (Attempt ${retries + 1}/${this.maxRetries})`);
+          retries++
+        } else {
+          throw e
+        }
       }
     } while (retries < this.maxRetries)
     console.log(`IO operation failed after ${this.maxRetries} retries.`)
@@ -62,7 +66,7 @@ export class IORetryAdapter<T, Args extends any[] = any[]> {
    * @deprecated 将在0.1.0版本以后废弃,统一使用execute
    * @returns 
    */
-  public  executeWithRetry(...args: Args): Promise<T> {
+  public executeWithRetry(...args: Args): Promise<T> {
     console?.warn(`Function "executeWithRetry" will be deprecated after version 0.1.0, please use an alternative function "execute"`)
     return this.execute(...args)
   }

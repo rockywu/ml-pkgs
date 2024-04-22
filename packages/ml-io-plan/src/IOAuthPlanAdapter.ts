@@ -4,7 +4,7 @@
  * 为什么要设计这个场景，当APP应用或者游览器应用token过期后，需要换取新的token，让用户无感体验
  */
 
-import { IOFunction } from "./interface";
+import { IORequestAuthHandle } from "./interface";
 
 export class IOAuthPlanExpiredError extends Error {
   name = 'IOAuthPlanExpiredError'
@@ -19,15 +19,15 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
   /**
    * 过期时间完全由适配器返回异常
    */
-  private isTokenExpired: boolean = false;
+  private isTokenExpired: boolean = true;
 
   private requestAuthPromise: Promise<any> = null;
 
   /**
    * 
-   * @param requestAuth 获取auth权限
+   * @param ioAuthHandle 认证请求句柄auth权限
    */
-  constructor(private requestAuth: IOFunction, private ioFunction: IOFunction<T, Args>) { }
+  constructor(private ioAuthHandle: IORequestAuthHandle) { }
 
   /**
    * 尝试发起
@@ -35,7 +35,7 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
   public requestAuthNeeded() {
     //若已经发起过
     if (this.requestAuthPromise === null) {
-      this.requestAuthPromise = this.requestAuth()
+      this.requestAuthPromise = this.ioAuthHandle.requestAuth()
     }
     return this.requestAuthPromise;
   }
@@ -55,12 +55,11 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
       } catch (e) {
         this.requestAuthPromise = null;
         throw e;
-
       }
     }
     let res;
     try {
-      res = await this.ioFunction(...args)
+      res = await this.ioAuthHandle.request(...args)
     } catch (e: any | IOAuthPlanExpiredError) {
       if (e.name === 'IOAuthPlanExpiredError') {
         //当出现过期异常，则重新请求token

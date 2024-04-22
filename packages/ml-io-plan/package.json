@@ -1,6 +1,6 @@
 {
   "name": "@ml-pkgs/ml-io-plan",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "types": "./dist/types/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",
@@ -13,7 +13,7 @@
   },
   "description": "io-plan IO 计划",
   "scripts": {
-    "build": "npm run test && rollup -c rollup.config.mjs",
+    "build": "npm run test && rollup -w -c rollup.config.mjs",
     "build:publish": " npm run test && cross-env NODE_ENV=production rollup -c rollup.config.mjs",
     "test": "jest",
     "publish": "npm run build:publish && npm publish"
@@ -48,6 +48,7 @@
     "dist",
     "README.md",
     "README.en.md",
+    "CHANGELOG.md",
     "package.json"
   ]
 }
