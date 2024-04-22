@@ -17,12 +17,12 @@
     console.log('click - sec')
     cross.send('sec', {'message': 'sec'})
   }
-  cross.on('index', function(message, event) {
+  cross.on('first', function(message, event) {
     console.log('context', this)
     console.log('event', event, 'message', message)
 
   }, {context: 1})
-  cross.once('index', function(message, event) {
+  cross.once('first', function(message, event) {
     console.log('once-context', this)
     console.log('once-event', event, 'message', message)
   }, {context: 2})

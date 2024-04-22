@@ -15,7 +15,7 @@
   var cross = MlCrossWebPage.CrossWebPageInvoke;
   var onClick = function () {
     console.log('click - sec')
-    cross.send('index', {'message': 'index'})
+    cross.send('first', {'message': 'first'})
   }
   cross.on('sec', function(message, event) {
     console.log('context', this)

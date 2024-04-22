@@ -58,12 +58,10 @@ export class CrossWebPageInvokeFactory extends EventEmitter {
 
   private crossHander: ICrossHander = null;
 
-  constructor(public channelKey: string = DEFAULT_CHANNEL_KEY, crossHander?: ICrossHander) {
+  constructor(crossHander: ICrossHander = new CrossHander(DEFAULT_CHANNEL_KEY)) {
     super();
     if (crossHander) {
       this.crossHander = crossHander;
-    } else {
-      this.crossHander = new CrossHander(channelKey);
     }
     // 执行程序连接器,只要作用是绑定监听事件
     this.crossHander.attach((invokeMessage) => {
@@ -92,4 +90,4 @@ export class CrossWebPageInvokeFactory extends EventEmitter {
 /**
  * 创建一个基础对象
  */
-export const CrossWebPageInvoke = new CrossWebPageInvokeFactory(DEFAULT_CHANNEL_KEY)
+export const CrossWebPageInvoke = new CrossWebPageInvokeFactory()
