@@ -1,6 +1,6 @@
 {
   "name": "@ml-pkgs/ml-io-plan",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "umdName": "MLIoPlan",
   "description": "io-plan 特点提供常见的业务或者个性的io执行流程",
   "homepage": "https://github.com/rockywu/ml-pkgs/tree/main/packages/ml-io-plan",
