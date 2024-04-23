@@ -22,14 +22,14 @@ export class IOPlanRetryAdapter<T, Args extends any[] = any[]> {
    * @param ioOptions 请求配置  {
       maxRetries?: number,
       retryInterval?: number,
-      networkErrorCallback?: (times: number) => void
+      retryCallback?: (time: number) => void | Promise<void>
     }
    */
   constructor(
     public readonly ioRequestHandle: IORequestHandle<T, Args>,
     ioOptions?: IOPlanRetryOptions
   ) {
-    this.ioOptions = { ...{ maxRetries: 3, retryInterval: 300, networkErrorCallback: () => { } }, ...ioOptions };
+    this.ioOptions = { ...{ maxRetries: 3, retryInterval: 300, retryCallback: () => { } }, ...ioOptions };
   }
 
   /**
@@ -54,8 +54,8 @@ export class IOPlanRetryAdapter<T, Args extends any[] = any[]> {
           console.log(`IO operation failed, retrying... (Attempt ${retries + 1}/${this.ioOptions.maxRetries})`);
           retries++;
           //支持网络异常等待
-          if (this.ioOptions?.networkErrorCallback) {
-            await this.ioOptions?.networkErrorCallback(retries);
+          if (this.ioOptions?.retryCallback) {
+            await this.ioOptions?.retryCallback(retries);
           }
         } else {
           throw e;

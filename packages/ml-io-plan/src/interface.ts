@@ -15,7 +15,7 @@ export interface IORequestAuthHandle<T, Args extends any[] = any[]> extends IORe
 export interface IOPlanRetryOptions {
   maxRetries?: number,
   retryInterval?: number,
-  networkErrorCallback?: (times: number) => PromiseType<void>
+  retryCallback?: (time: number) => PromiseType<void>
 }
 
 export interface IOPlanAuthOptions {
@@ -26,7 +26,8 @@ export interface IOPlanAuthOptions {
  * 定义网络异常
  */
 export class IOPlanNetworkError extends Error {
-  name = 'IOPlanNetworkError';
+  name:string = 'IOPlanNetworkError';
+  message: string = 'IOPlanNetworkError';
 }
 
 /**
@@ -34,4 +35,5 @@ export class IOPlanNetworkError extends Error {
  */
 export class IOPlanAuthError extends Error {
   name = 'IOPlanAuthError';
+  message: string = 'IOPlanAuthError';
 }

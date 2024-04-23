@@ -35,6 +35,13 @@ class MockIORequestAuthInitShouldFailHande extends MockIORequestAuthHandle {
   }
 }
 
+class MockIORequestAuthInitShouldAuthErrorHande extends MockIORequestAuthHandle {
+  async requestAuth(): Promise<void> {
+    await delay(100)
+    throw new Error(K_MOCK_AUTH_Error)
+  }
+}
+
 class MockIORequestAuthInitShouldSuccessHande extends MockIORequestAuthHandle {
   async requestAuth(): Promise<void> {
     await delay(100)
@@ -88,6 +95,11 @@ describe('IOPlanRetryAdapter', () => {
   test('执行：默认启动进行auth认证,等待认证成功的返回值', async () => {
     ioAdapter = new IOPlanAuthAdapter(new MockIORequestAuthInitShouldSuccessHande(), { initialShouldRequestAuth: true });
     await expect(ioAdapter.execute('authError', null, 'name')).resolves.toBe('name')
+  })
+
+  test('执行：默认启动进行auth认证, 模拟认证时返回认证异常的场景，等待认证失败返回', async () => {
+    ioAdapter = new IOPlanAuthAdapter(new MockIORequestAuthInitShouldAuthErrorHande(), { initialShouldRequestAuth: true });
+    await expect(ioAdapter.execute('authError', true, 'name')).rejects.toThrow(K_MOCK_AUTH_Error)
   })
 
 });

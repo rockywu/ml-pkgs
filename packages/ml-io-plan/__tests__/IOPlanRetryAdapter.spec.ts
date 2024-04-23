@@ -62,7 +62,7 @@ describe('IOPlanRetryAdapter', () => {
   test('执行：网络异常抖动时，一次网络异常,并返回成功值', async () => {
     let times = 0;
     ioAdapter = new IOPlanRetryAdapter(new MockIORequestHandle(), {
-      maxRetries: 2, retryInterval: 100, networkErrorCallback: (ts: number) => {
+      maxRetries: 2, retryInterval: 100, retryCallback: (ts: number) => {
         console.log('times', times)
         times = ts
       }
@@ -77,7 +77,7 @@ describe('IOPlanRetryAdapter', () => {
   test('执行：网络异常抖动时，一次网络异常,并返回接口异常', async () => {
     let times = 0;
     ioAdapter = new IOPlanRetryAdapter(new MockIORequestHandle(), {
-      maxRetries: 2, retryInterval: 100, networkErrorCallback: (ts: number) => {
+      maxRetries: 2, retryInterval: 100, retryCallback: (ts: number) => {
         times = ts
       }
     });

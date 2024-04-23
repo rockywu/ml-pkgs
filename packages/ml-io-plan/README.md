@@ -2,134 +2,172 @@
 
 >  目标是设计一个通用的IO 计划机制
 
-#### 安装
+### 安装
 
 `npm i @ml-pkgs/ml-io-plan`
 
-#### 使用 Api
+### CHANGELOG
 
-1. IORetryAdapter IO重试适配器
-2. IOAuthPlanAdapter IO认证适配器
-3. IOAuthPlanExpiredError IO认证异常Error
+[点击查看](https://github.com/rockywu/ml-pkgs/blob/HEAD/packages/ml-io-plan/CHANGELOG.md)
 
-**Version 0.1.0 之后将废弃函数**
+### API
 
-`IORetryAdapter.executeWithRetry` 请使用 `IORetryAdapter.execute`
-
-`IOAuthPlanAdapter.executeWithRequest` 请使用 `executeWithRequest.execute`
-
-
-######  1、IORetryAdapter
-
-> IO 重试机制
+#### IOPlanRetryAdapter IO重试适配器
 
 ```
-import {IORetryAdapter} from '@ml-pkgs/ml-io-plan'
 /**
- * IORetryAdapter example
+ * 通用适配器
+ * @param ioRequestHandle  请求句柄 请实现接口 IORequestHandle
+ * @param ioOptions 请求配置  {
+    maxRetries?: number, //最大重试次数
+    retryInterval?: number, //每次重试等待毫秒数ms
+    retryCallback?: (time: number) => void | Prmise<void> //网络错误回调支持监听网络重试次数
+  }
  */
+constructor(
+  public readonly ioRequestHandle: IORequestHandle<T, Args>,
+  ioOptions?: IOPlanRetryOptions
+)
+```
 
-async fetchData(...args) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(args);
-        }, 300);
-    })
-}
+#### IOPlanAuthAdapter IO认证适配器
 
-const ioRetryImpl = new IORetryAdapter(fetchData, 5, 2000);
+```
 /**
- * Old Demo
+ * 
+ * @param ioRequestHandle 认证请求句柄auth权限, IORequestAuthHandle 实现接口
+ * @param ioOptions 认证计划配置 {
+    initialShouldRequestAuth?: boolean //启动时是否默认检查认证，默认为false 不自动检查
+ * }
+ */
+constructor(
+  ioRequestHandle: IORequestAuthHandle<T, Args>, 
+  ioOptions?: IOPlanAuthOptions
+)
+```
+
+#### IORequestHandle 对象接口
+
+```
+export interface IORequestHandle<T, Args extends any[] = any[]> {
+    request(...args: Args): PromiseType<T>;
+}
+```
+
+#### IORequestAuthHandle 认证对象接口
+
+```
+export interface IORequestAuthHandle<T, Args extends any[] = any[]> extends IORequestHandle<T, Args> {
+    requestAuth(): PromiseType<void>;
+}
+```
+
+#### IOPlanNetworkError
+
+```
+/**
+ * 定义网络异常
+ */
+export class IOPlanNetworkError extends Error {
+  name:string = 'IOPlanNetworkError';
+  message: string = 'IOPlanNetworkError';
+}
+```
+
+#### IOPlanAuthError
+
+```
+/**
+ * 定义认证异常
+ */
+export class IOPlanAuthError extends Error {
+  name = 'IOPlanAuthError';
+  message: string = 'IOPlanAuthError';
+}
+```
+
+
+### I如何使用
+
+> 简单介绍API的使用方式
+
+#####  1、IORetryAdapter
+
+- IO 重试机制
+
+```
+import {IOPlanRetryAdapter, IOPlanNetworkError, IORequestHandle} from '@ml-pkgs/ml-io-plan'
+
+class MockIORequestHandle implements IORequestHandle<any> {
+  async request(...args) {
+    try {
+      //mock request fetch
+      return await fetch(...args)
+    } catch(e) {
+      if(/* IF is NetworkError */) {
+        //模拟网络异常
+        throw new IOPlanNetworkError()
+      }
+      throw e;
+    }
+  }
+}
+const ioRetryImpl = new IOPlanRetryAdapter(MockIORequestHandle, {
+  maxRetries: 2, //最多重试2次
+  retryInterval: 100, //每次重试间隔100ms
+  //重试回调函数
+  retryCallback: async (ts: number) => {
+    console.log('time', ts)
+  }
+});
+
+
+/**
+ * Run Demo
  */
 async function run() {
-    let res = await ioRetryImpl.executeWithRetry('test1', 'test2')
-    console.log('result', res);
-    //console.log ["test1", "test2"]
+  const result = await ioRetryImpl.execute('test1', 'test2')
+  console.log("result', result)
 }
-
-/**
- * New Demo
- */
-async function run() {
-    let res = await ioRetryImpl.execute('test1', 'test2')
-    console.log('result', res);
-    //console.log ["test1", "test2"]
-}
-
 ```
 
 
 ######  2、IOAuthPlanAdapter
 
-> IO 认证方案适配器
+- IO 认证方案适配器
 
 ```
-import { IOAuthPlanAdapter, IOAuthPlanExpiredError, IORetryAdapter, delay } from '@ml-pkgs/ml-io-plan'
+import { IOPlanAuthAdapter, IOPlanAuthError, IORequestAuthHandle} from '@ml-pkgs/ml-io-plan'
 
-const store = {
-    value: '',
-    expired: 0
-}
-
-const getToken = () => {
-    if(store.expired < Date.now()) {
-        return null;
+class MockIORequestAuthHandle implements IORequestAuthHandle<any> {
+  async requestAuth() {
+    // mock auth request fetch
+    return await fetchAuth();
+  }
+  async request(...args) {
+    try {
+      //use ioRetryImpl for mock request fetch
+      return await ioRetryImpl.request(...args);
+    } catch(e) {
+      if(/* IF is AuthError */) {
+        //模拟认证异常
+        throw new IOPlanAuthError()
+      }
+      throw e;
     }
-    return store.value;
-}
-
-//5秒过期
-const setToken = (value) => {
-    store.value = value;
-    store.expired = Date.now() + 5 * 1000;
-}
-
-
-/**
- * retry the token within 3 times, Wait 100ms after each failure
- */
-const authHandle = new IORetryAdapter(async () => {
-  await delay(1000)
-  const rd = Math.random();
-  if (rd > 0.5) {
-    setToken('my token')
-    return;
   }
-  throw new Error("获取token失败")
-}, 3, 100)
-
-/**
- * get Request data
- */
-async function ioRequest(p) {
-  console.log('p', p)
-  await delay(500)
-  const token = getToken();
-  if (!token) {
-    console.log("token已过期")
-    throw new IOAuthPlanExpiredError('TokenExpired')
-  }
-  return p
-}
-
-//尝试模拟IO认证机制
-const io = new IOAuthPlanAdapter(authHandle.executeWithRetry.bind(authHandle), ioRequest);
-
-/**
- * Old Demo 1
- */
-async function run() {
-  const res = await Promise.all([
-    io.executeWithRequest(1),
-    io.executeWithRequest(2),
-    io.executeWithRequest(3),
-    io.executeWithRequest(4)
-  ])
-  console.log('result', JSON.stringify(res))
 }
 
 /**
- * New Demo 2
+ * 如何两个计划联合使用
+ */
+const ioAuthImpl = new IOPlanAuthAdapter(new MockIORequestAuthHandle(), {
+  initialShouldRequestAuth: false, //启动时默认是否进行默认认证
+});
+
+
+/**
+ * Run Demo
  */
  async function run() {
   const res = await Promise.all([
@@ -141,6 +179,5 @@ async function run() {
   console.log('result', JSON.stringify(res))
 }
 
-run();
 ```
 
