@@ -5,7 +5,7 @@
  */
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { IORequestAuthHandle, PromiseType, IOPlanAuthError } from './interface';
+import { IORequestAuthHandle, PromiseType, IOPlanAuthError, IOPlanAuthOptions } from './interface';
 
 /**
  * 所有Io请求将通过该适配器进行发送,只描述请求发起
@@ -13,17 +13,22 @@ import { IORequestAuthHandle, PromiseType, IOPlanAuthError } from './interface';
 export class IOPlanAuthAdapter<T, Args extends any[] = any[]> {
 
   /**
-   * 过期时间完全由适配器返回异常
+   * 判断是否需要直接认证
    */
-  private isTokenExpired: boolean = true;
+  private shouldRequestAuth: boolean = false;
 
   private requestAuthPromise: PromiseType<void> = null;
 
   /**
    * 
-   * @param ioAuthHandle 认证请求句柄auth权限, IORequestAuthHandle 实现接口
+   * @param ioRequestHandle 认证请求句柄auth权限, IORequestAuthHandle 实现接口
+   * @param ioOptions 认证计划配置 {
+      initialShouldRequestAuth?: boolean
+   * }
    */
-  constructor(public readonly ioAuthHandle: IORequestAuthHandle<T, Args>) { }
+  constructor(public readonly ioRequestHandle: IORequestAuthHandle<T, Args>, ioOptions?: IOPlanAuthOptions) {
+    this.shouldRequestAuth = !!ioOptions?.initialShouldRequestAuth;
+  }
 
   /**
    * 尝试发起
@@ -31,7 +36,7 @@ export class IOPlanAuthAdapter<T, Args extends any[] = any[]> {
   private requestAuthNeeded() {
     //若已经发起过
     if (this.requestAuthPromise === null) {
-      this.requestAuthPromise = this.ioAuthHandle.requestAuth();
+      this.requestAuthPromise = this.ioRequestHandle.requestAuth();
     }
     return this.requestAuthPromise;
   }
@@ -42,12 +47,12 @@ export class IOPlanAuthAdapter<T, Args extends any[] = any[]> {
    * @returns 
    */
   async execute(...args: Args): Promise<T> {
-    if (this.isTokenExpired) {
+    if (this.shouldRequestAuth) {
       //尝试等待
       try {
         await this.requestAuthNeeded();
         this.requestAuthPromise = null;
-        this.isTokenExpired = false;
+        this.shouldRequestAuth = false;
       } catch (e) {
         this.requestAuthPromise = null;
         throw e;
@@ -55,11 +60,11 @@ export class IOPlanAuthAdapter<T, Args extends any[] = any[]> {
     }
     let res;
     try {
-      res = await this.ioAuthHandle.request(...args);
+      res = await this.ioRequestHandle.request(...args);
     } catch (e: any | IOPlanAuthError) {
       if (e.name === 'IOPlanAuthError') {
         //当出现过期异常，则重新请求token
-        this.isTokenExpired = true;
+        this.shouldRequestAuth = true;
         res = await this.execute(...args);
       } else {
         throw e;

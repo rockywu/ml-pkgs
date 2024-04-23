@@ -20,7 +20,7 @@ export class IOPlanRetryAdapter<T, Args extends any[] = any[]> {
    * 通用适配器
    * @param ioRequestHandle  请求句柄 请实现接口 IORequestHandle
    * @param ioOptions 请求配置  {
-   *  maxRetries?: number,
+      maxRetries?: number,
       retryInterval?: number,
       networkErrorCallback?: (times: number) => void
     }

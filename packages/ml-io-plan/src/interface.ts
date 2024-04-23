@@ -18,6 +18,10 @@ export interface IOPlanRetryOptions {
   networkErrorCallback?: (times: number) => PromiseType<void>
 }
 
+export interface IOPlanAuthOptions {
+  initialShouldRequestAuth?: boolean
+}
+
 /**
  * 定义网络异常
  */

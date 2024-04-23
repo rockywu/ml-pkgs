@@ -1,105 +1,93 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { IOPlanAuthError, IOPlanNetworkError, IOPlanRetryAdapter, IOPlanAuthAdapter, IORequestAuthHandle, IORequestHandle, PromiseType } from '../src';
+import { IOPlanAuthAdapter, IOPlanAuthError, IOPlanNetworkError, IORequestAuthHandle } from '../src';
+import { delay } from '../src/utils';
 
+const K_MOCK_AUTH_FAIL = 'Mock Auth Fail';
+const K_MOCK_AUTH_Error = 'Mock Auth Error';
 
-class TestAuthRequest implements IORequestAuthHandle<any> {
-  requestAuth(): PromiseType<void> {
-    throw new Error('Method not implemented.');
+class MockIORequestAuthHandle implements IORequestAuthHandle<any> {
+  cnt: number = 0;
+  authSuccess: boolean = false;
+  canNext: boolean = false;
+  errorType: string = '';
+  async requestAuth(): Promise<void> {
+    await delay(100)
+    if (this.authSuccess === true) {
+      this.canNext = true;
+    } else {
+      throw new Error(K_MOCK_AUTH_FAIL)
+    }
   }
-  async request(params) {
-    return params;
+  async request(...args) {
+    await delay(100)
+    this.errorType = args?.[0];
+    this.authSuccess = !!args?.[1];
+    if (this.errorType === 'authError' && !this.canNext) {
+      throw new IOPlanAuthError(K_MOCK_AUTH_Error)
+    }
+    return args?.[2];
   }
 }
 
-describe('IOPlanAuthAdapter', () => {
-  let adapter;
+class MockIORequestAuthInitShouldFailHande extends MockIORequestAuthHandle {
+  async requestAuth(): Promise<void> {
+    await delay(100)
+    throw new Error(K_MOCK_AUTH_FAIL)
+  }
+}
 
+class MockIORequestAuthInitShouldSuccessHande extends MockIORequestAuthHandle {
+  async requestAuth(): Promise<void> {
+    await delay(100)
+    this.canNext = true;
+  }
+}
+
+// 测试 IOPlanRetryAdapter 类
+describe('IOPlanRetryAdapter', () => {
+  let ioAdapter;
   beforeEach(() => {
-    adapter = new IOPlanAuthAdapter(new TestAuthRequest())
+    ioAdapter = new IOPlanAuthAdapter(new MockIORequestAuthHandle(), { initialShouldRequestAuth: false });
   })
 
-  test('', async () => {
-    expect(1).toBe(1);
+  // 测试构造函数
+  test('执行：构造函数入参', () => {
+    expect(ioAdapter['ioRequestHandle']).toBeInstanceOf(MockIORequestAuthHandle);
   });
 
-
-})
-
-
-
-// import { IOAuthPlanAdapter, IOAuthPlanExpiredError } from '../src/IOAuthPlanAdapter';
-
-// class Store {
-//   public value: string;
-//   get() {
-//     return this.value;
-//   }
-//   set(value: string) {
-//     this.value = value;
-//   }
-// }
-
-describe('IOAuthPlanAdapter', () => {
-  // let requestAuthMock;
-  // let ioFunctionMock;
-  // let adapter;
-  // let store;
-
-  beforeEach(() => {
-    // store = new Store();
-    // requestAuthMock = jest.fn();
-    // ioFunctionMock = jest.fn();
-    // adapter = new IOAuthPlanAdapter(requestAuthMock, ioFunctionMock);
-  });
-  // test('如果令牌过期，executeWithRequest应该调用requestAuth', async () => {
-  //   ioFunctionMock.mockReturnValue(new Promise((resolve, reject) => {
-  //     const token = store.get();
-  //     if (!token) {
-  //       reject(new IOAuthPlanExpiredError('token过期了'))
-  //     }
-  //     resolve(null)
-  //   }))
-  //   requestAuthMock.mockReturnValue(new Promise((resolve) => {
-  //     store.set('token')
-  //     resolve(null)
-  //   }))
-  //   adapter.execute()
-  //   expect(requestAuthMock).toHaveBeenCalledTimes(1);
-  // })
-
-  test('test', async () => {
-    expect(1).toBe(1);
+  test('执行：一个请求，等待认证失败的返回值', async () => {
+    await expect(ioAdapter.execute('authError', false)).rejects.toThrow(K_MOCK_AUTH_FAIL);
   });
 
-  //   test('executeWithRequest should call requestAuth if token is expired', async () => {
-  //     ioFunctionMock.mockReturnValue(Promise.reject(new IOAuthPlanExpiredError('Token expired')))
-  //     // 设置 requestAuth 方法返回的 promise
-  //     const requestAuthPromise = Promise.resolve();
-  //     requestAuthMock.mockReturnValue(requestAuthPromise);
+  test('执行：多个并发请求存在部分成功,等待认证失败的返回值', async () => {
+    await expect(Promise.all([
+      ioAdapter.execute('authError'),
+      ioAdapter.execute('authError', true),
+      ioAdapter.execute('authError', true),
+      ioAdapter.execute('authError'),
+    ])).rejects.toThrow(K_MOCK_AUTH_FAIL);
+  })
 
-  //     // 调用被测试的方法
-  //     let res = await Promise.all([
-  //       adapter.executeWithRequest(1),
-  //       adapter.executeWithRequest(2),
-  //       adapter.executeWithRequest(3),
-  //     ])
-  //     console.log(444, res)
+  test('执行：一个请求，等待认证成功的返回', async () => {
+    await expect(ioAdapter.execute('authError', true, 'name')).resolves.toBe('name')
+  })
 
-  //     // 验证 requestAuth 方法被调用了一次
-  //     expect(requestAuthMock).toHaveBeenCalledTimes(1);
-  //   });
+  test('执行：多个并发请求,存在部分重新认证,等待认证成功的返回值', async () => {
+    await expect(Promise.all([
+      ioAdapter.execute('authError', true, 1),
+      ioAdapter.execute('authError', true, 2),
+      ioAdapter.execute('authError', true, 3),
+      ioAdapter.execute(null, true, 4),
+    ])).resolves.toEqual([1, 2, 3, 4])
+  })
 
-  //   // test('executeWithRequest should call ioFunction after requesting auth', async () => {
-  //   //   // 设置 requestAuth 方法返回的 promise
-  //   //   const requestAuthPromise = Promise.resolve();
-  //   //   requestAuthMock.mockReturnValue(requestAuthPromise);
+  test('执行：默认启动进行auth认证,等待认证失败的返回值', async () => {
+    ioAdapter = new IOPlanAuthAdapter(new MockIORequestAuthInitShouldFailHande(), { initialShouldRequestAuth: true });
+    await expect(ioAdapter.execute('authError')).rejects.toThrow(K_MOCK_AUTH_FAIL);
+  })
 
-  //   //   // 调用被测试的方法
-  //   //   await adapter.executeWithRequest();
+  test('执行：默认启动进行auth认证,等待认证成功的返回值', async () => {
+    ioAdapter = new IOPlanAuthAdapter(new MockIORequestAuthInitShouldSuccessHande(), { initialShouldRequestAuth: true });
+    await expect(ioAdapter.execute('authError', null, 'name')).resolves.toBe('name')
+  })
 
-  //   //   // 验证 ioFunction 方法被调用了一次
-  //   //   expect(ioFunctionMock).toHaveBeenCalledTimes(1);
-  //   // });
-
-  //   // 添加更多的测试用例...
 });
