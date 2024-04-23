@@ -20,5 +20,8 @@
   },
   "config": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "eslintConfig": {
+    "extends": "./.eslintrc.js"
   }
 }

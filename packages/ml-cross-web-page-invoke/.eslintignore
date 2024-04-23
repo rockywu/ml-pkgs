@@ -3,4 +3,5 @@ jest.config.js
 rollup.config.mjs
 rollup.config.dev.mjs
 tools.mjs
+__tests__/
 
