@@ -87,7 +87,7 @@ export class IOPlanAuthError extends Error {
 ```
 
 
-### I如何使用
+### 如何使用
 
 > 简单介绍API的使用方式
 
