@@ -1,3 +1,32 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { IOPlanAuthError, IOPlanNetworkError, IOPlanRetryAdapter, IOPlanAuthAdapter, IORequestAuthHandle, IORequestHandle, PromiseType } from '../src';
+
+
+class TestAuthRequest implements IORequestAuthHandle<any> {
+  requestAuth(): PromiseType<void> {
+    throw new Error('Method not implemented.');
+  }
+  async request(params) {
+    return params;
+  }
+}
+
+describe('IOPlanAuthAdapter', () => {
+  let adapter;
+
+  beforeEach(() => {
+    adapter = new IOPlanAuthAdapter(new TestAuthRequest())
+  })
+
+  test('', async () => {
+    expect(1).toBe(1);
+  });
+
+
+})
+
+
+
 // import { IOAuthPlanAdapter, IOAuthPlanExpiredError } from '../src/IOAuthPlanAdapter';
 
 // class Store {

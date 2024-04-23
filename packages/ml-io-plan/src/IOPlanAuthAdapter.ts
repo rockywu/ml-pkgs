@@ -4,38 +4,34 @@
  * 为什么要设计这个场景，当APP应用或者游览器应用token过期后，需要换取新的token，让用户无感体验
  */
 
-import { IORequestAuthHandle } from "./interface";
-
-export class IOAuthPlanExpiredError extends Error {
-  name = 'IOAuthPlanExpiredError'
-}
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { IORequestAuthHandle, PromiseType, IOPlanAuthError } from './interface';
 
 /**
  * 所有Io请求将通过该适配器进行发送,只描述请求发起
  */
-export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
+export class IOPlanAuthAdapter<T, Args extends any[] = any[]> {
 
   /**
    * 过期时间完全由适配器返回异常
    */
   private isTokenExpired: boolean = true;
 
-  private requestAuthPromise: Promise<any> = null;
+  private requestAuthPromise: PromiseType<void> = null;
 
   /**
    * 
-   * @param ioAuthHandle 认证请求句柄auth权限
+   * @param ioAuthHandle 认证请求句柄auth权限, IORequestAuthHandle 实现接口
    */
-  constructor(private ioAuthHandle: IORequestAuthHandle) { }
+  constructor(public readonly ioAuthHandle: IORequestAuthHandle<T, Args>) { }
 
   /**
    * 尝试发起
    */
-  public requestAuthNeeded() {
+  private requestAuthNeeded() {
     //若已经发起过
     if (this.requestAuthPromise === null) {
-      this.requestAuthPromise = this.ioAuthHandle.requestAuth()
+      this.requestAuthPromise = this.ioAuthHandle.requestAuth();
     }
     return this.requestAuthPromise;
   }
@@ -59,9 +55,9 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
     }
     let res;
     try {
-      res = await this.ioAuthHandle.request(...args)
-    } catch (e: any | IOAuthPlanExpiredError) {
-      if (e.name === 'IOAuthPlanExpiredError') {
+      res = await this.ioAuthHandle.request(...args);
+    } catch (e: any | IOPlanAuthError) {
+      if (e.name === 'IOPlanAuthError') {
         //当出现过期异常，则重新请求token
         this.isTokenExpired = true;
         res = await this.execute(...args);
@@ -71,17 +67,6 @@ export class IOAuthPlanAdapter<T, Args extends any[] = any[]> {
     }
     //否则返回成功值
     return res;
-  }
-
-  /**
-   * 发起IO请求
-   * @param args 
-   * @deprecated 将在0.1.0版本以后废弃,统一使用execute
-   * @returns 
-   */
-  executeWithRequest(...args: Args): Promise<T> {
-    console?.warn(`Function "executeWithRequest" will be deprecated after version 0.1.0, please use an alternative function "execute"`)
-    return this.execute(...args)
   }
 }
 

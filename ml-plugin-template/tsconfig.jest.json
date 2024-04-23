@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.root.json",
   "compilerOptions": {
+    "noUnusedLocals": false, //是否检查未使用的局部变量
+    "noUnusedParameters": false, //是否检查未使用的参数
     "types": [
       "jest"
     ],
@@ -8,10 +10,9 @@
   },
   "include": [
     "src/**/*.ts",
-    "__tests__/**/*.ts",
-    "example/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "__tests__",
   ]
 }

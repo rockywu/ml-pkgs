@@ -1,5 +1,5 @@
 
-export * from './IORetryAdapter'
-export * from './IOAuthPlanAdapter'
-export * from './interface'
+export * from './IOPlanRetryAdapter';
+export * from './IOPlanAuthAdapter';
+export * from './interface';
 
