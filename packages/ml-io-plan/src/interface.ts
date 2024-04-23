@@ -12,6 +12,12 @@ export interface IORequestAuthHandle<T, Args extends any[] = any[]> extends IORe
   requestAuth(): PromiseType<void>
 }
 
+export interface IOPlanRetryOptions {
+  maxRetries?: number,
+  retryInterval?: number,
+  networkErrorCallback?: (times: number) => PromiseType<void>
+}
+
 /**
  * 定义网络异常
  */
