@@ -8,8 +8,8 @@
 
 ### 兼容
 
-* 支持nodejs
-* 支持主流游览器
+* 支持 Nodejs
+* 支持 Browser
 
 ### 安装
 
@@ -21,7 +21,7 @@
 
 ### API
 
-* **`IOPlanRetryAdapter`** IO重试适配器
+* **`IOPlanRetryAdapter`** IO重试适配器(设计的目的最初为解决移动网络抖动场景)
 
 ```
 /**
@@ -40,7 +40,7 @@ constructor(
 ```
 
 
-* **`IOPlanAuthAdapter`** IO认证适配器
+* **`IOPlanAuthAdapter`** IO认证适配器(设计的目的最初是为支持token热刷新场景)
 
 ```
 /**
